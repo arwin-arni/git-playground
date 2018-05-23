@@ -1,0 +1,74 @@
+I want to create a story branch:
+	What do I do?
+		* Make sure development has the latest code, then create a branch off of development
+	What command can I run?
+		* git fetch
+		* git checkout development
+		* git reset --hard origin/development
+		* git checkout -b `[story number]-name-of-branch`
+        * git push -u origin `[story number]-name-of-branch`
+I want to get the latest code from development into my story branch
+	What do I do?
+		* Make sure you have the latest code, then rebase your branch onto development. Afterwards, you'll need to force push your branch
+	Why do I do it that way?
+		* Our goal is to keep a linear git history. This makes it easier to review what has happened and correct any mistakes.
+		* The force push is needed because the history of the branch no longer matches the remote, so git does not know how to handle your changes
+	What commands can I run?
+		* git fetch
+		* git checkout `my-branch`
+                * git pull --rebase origin `my-branch`
+		* git rebase origin/development
+		* {{If there are merge conflicts, they will need to be resolved}}
+		* {{check to make sure the branch looks good in a tree viewer}}
+		* git push origin `my-branch` --force-with-lease
+I am finished developing and I want my branch reviewed and tested
+	What do I do?
+		* Make sure your branch has the latest code from development (see above)
+		* Create a pull request in github
+		* Move the story in Lifecycle to a status of "Ready For Test"
+	Why do I do it that way?
+		* You want the latest code so an outdated version of your branch is not being tested
+		* Creating a pull request signals your code is ready for code review
+		* Changing the story status signifies to a tester that your story is done being developed
+I want to merge my story branch into development
+	What do I do?
+		* Make sure you have the latest code. 
+		* Rebase your branch onto development.
+		* Non fastforwarding merge your branch into development
+		* Push development to origin
+		* Delete your branch
+	Why do I do it that way?
+		* Our goal is to keep a linear git history. This makes it easier to review what has happened and correct any mistakes.
+		* Non fastforwarding merges allow us to see history such as what work happened in what branch and in what order
+		* Deleting the branch keeps our git repo from getting cluttered with old branches. This will also clean up pull requests
+	What commands can I run?
+		* git fetch
+		* git checkout `my-branch`
+		* git pull --rebase origin `my-branch`
+		* git rebase origin/development
+		* {{If there are merge conflicts, they will need to be resolved}}
+		* {{check to make sure the branch looks good in a tree viewer}}
+		* git checkout development
+		* git reset --hard origin/development
+		* git merge --no-ff `my-branch`
+		* {{check to make sure development looks good in a tree viewer}}
+		* git push origin development
+		* git push -d origin `my-branch`
+		* git branch -d `my-branch`
+I want to view my branch in a tree viewer
+	What am I looking for?
+		* Merge commits should have exactly 2 parents. That is, there should be two lines going to the merge commit. 
+		* Other commits should have exactly one parent. That is, there should be one line going to the commit
+		* My new work should be on top
+		* All my new work should be there. Make sure nothing is missing
+		* My work should not contain any merges, except the merge into development or a feature branch
+	What can I use to view in tree view?
+		* On git bash for windows, use `gitk`
+                * A thirdparty tool such as gitkraken or gitx
+                * `git log --oneline --decorate --graph`
+
+Troublshooting
+When I run `git push origin <my-branch>` it pushes to a different branch.
+	Your branch might be set up to track the wrong branch. Run `git branch -vv` to see what remote branch your local branches are set up to track.
+	If you branch is set up to track the wrong branch:
+		* git push -u origin `branch-name`:`branch-name`
